@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RelayerResponse",
+  "type": "object",
+  "required": [
+    "is_relayer",
+    "relayer"
+  ],
+  "properties": {
+    "is_relayer": {
+      "type": "boolean"
+    },
+    "relayer": {
+      "type": "string"
+    }
+  }
+}

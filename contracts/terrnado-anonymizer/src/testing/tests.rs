@@ -1,7 +1,7 @@
 use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
 use cosmwasm_std::{attr, BankMsg, coin, Coin, CosmosMsg, from_binary, SubMsg, Uint128};
-use terrnado::terrnado_anonymizer::{ConfigResponse, ExecuteMsg, InstantiateMsg, QueryMsg, RelayerResponse, StateResponse};
-use crate::contract::{execute, instantiate, query};
+use terrnado::terrnado_anonymizer::{ConfigResponse, ExecuteMsg, InstantiateMsg, MigrateMsg, QueryMsg, RelayerResponse, StateResponse};
+use crate::contract::{execute, instantiate, migrate, query};
 
 use crate::errors::ContractError;
 
@@ -21,7 +21,22 @@ fn initialization() {
 }
 
 #[test]
-fn add_relayers1() {
+fn migration() {
+    let mut deps = mock_dependencies(&[]);
+    let info = mock_info("sender", &vec![]);
+    let msg = InstantiateMsg {};
+    let _res = instantiate(deps.as_mut(), mock_env(), info.clone(), msg).unwrap();
+
+    let msg = MigrateMsg {};
+    let res = migrate(deps.as_mut(), mock_env(),  msg).unwrap();
+    assert_eq!(
+        res.attributes.len(),
+        0,
+    )
+}
+
+#[test]
+fn add_relayers() {
     let mut deps = mock_dependencies(&[]);
     let info = mock_info("sender", &vec![]);
     let msg = InstantiateMsg {};
@@ -158,18 +173,6 @@ fn propose_withdraw() {
                                     attr("proposal_id", "1"),
     ]);
     assert_eq!(res.messages.len(), 0);
-
-    // assert_eq!(
-    //     res.messages,
-    //     vec![
-    //         SubMsg::new(
-    //             CosmosMsg::Bank(BankMsg::Send {
-    //                 to_address: info.sender.clone().into_string(),
-    //                 amount: vec![Coin { denom: String::from("uusd"), amount: Uint128::from(9900990u128) }],
-    //             })
-    //         )
-    //     ],
-    // );
 }
 
 #[test]

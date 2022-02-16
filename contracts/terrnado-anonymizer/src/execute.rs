@@ -68,8 +68,8 @@ pub fn confirm_proposal(
     Ok(Response::new()
         .add_message(CosmosMsg::Bank(
             BankMsg::Send {
-                to_address: proposal.to.clone().to_string(),
-                amount: vec![Coin { amount: proposal.amount.clone(), denom: String::from("uusd") }],
+                to_address: proposal.to.to_string(),
+                amount: vec![Coin { amount: proposal.amount, denom: String::from("uusd") }],
             },
         ))
         .add_attribute("action", "confirm_withdraw")
